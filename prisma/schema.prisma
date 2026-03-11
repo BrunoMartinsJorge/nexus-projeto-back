@@ -6,8 +6,15 @@
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model usuarios {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  nome  String
 }
