@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -14,7 +14,41 @@ datasource db {
 }
 
 model usuarios {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  nome  String
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  senha    String
+  nome     String
+  carteira carteira?
+  depositos Deposito[]
+}
+
+model carteira {
+  id        Int      @id @default(autoincrement())
+  usuario   usuarios @relation(fields: [usuarioId], references: [id])
+  usuarioId Int      @unique
+  saldo     saldo[]
+}
+
+model saldo {
+  id         Int        @id @default(autoincrement())
+  quantidade Int
+  carteira   carteira   @relation(fields: [carteiraid], references: [id])
+  carteiraid Int
+  tipo       tipo_valor
+}
+
+enum tipo_valor {
+  BRL
+  BTC
+  ETH
+}
+
+model Deposito {
+  id Int @id @default(autoincrement())
+  usuario usuarios @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  token tipo_valor
+  amount Int
+  idempotencyKey String
+  createAt DateTime @default(now())
 }
