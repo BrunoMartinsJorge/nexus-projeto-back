@@ -4,9 +4,9 @@ import { AuthMiddleware } from './core/middlewares/auth.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  console.log(process.env.URL_FRONT);
   app.enableCors({
-    origin: [process.env.URL_FRONT],
+    origin: process.env.URL_FRONT,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
   const authMiddleware = new AuthMiddleware();
