@@ -64,7 +64,7 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   │   │   ├── 📁 dto
 │   │   │   │   └── 📄 CotasaoDto.ts
 │   │   │   ├── 📁 form
-│   │   │   │   └── 📄 CotasaoForm.ts
+│   │   │   │   └── 📄 CotacaoForm.ts
 │   │   │   ├── 📁 services
 │   │   │   │   ├── 📄 swap.service.spec.ts
 │   │   │   │   └── 📄 swap.service.ts

@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import type { CotasaoForm } from '../form/CotasaoFormSchema';
-import { CotasaoDto } from '../dto/CotasaoDto';
+import type { CotacaoForm } from '../form/CotacaoFormSchema';
+import { CotasaoDto } from '../dto/CotacaoDto';
 import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/UsuarioNaoEncontradoException';
 import { ObjectEqualsException } from 'src/shared/exceptions/ObjectEqualsException';
 import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
@@ -23,7 +23,7 @@ export class SwapService {
     ETH: 'eth',
     BRL: 'brl',
   };
-  async calcularCotacao(form: CotasaoForm): Promise<CotasaoDto> {
+  async calcularCotacao(form: CotacaoForm): Promise<CotasaoDto> {
     const from = this.coinsIds[form.tokenFrom] ?? this.coinsIds[form.tokenTo];
     const to = this.coinsVsCurrencies[form.tokenTo];
 
@@ -40,14 +40,14 @@ export class SwapService {
     const bruto = form.amount * preco;
     const taxa = bruto * 0.015;
     const liquido = bruto - taxa;
-
-    return {
+    const dto = {
       cotasao: preco,
       quantidadeDestino: liquido,
       taxa,
     };
+    return dto;
   }
-  async efetuarSwap(form: CotasaoForm, userId: number): Promise<void> {
+  async efetuarSwap(form: CotacaoForm, userId: number): Promise<void> {
     const user = await this.prisma.usuarios.findUnique({
       where: { id: userId },
       include: {
