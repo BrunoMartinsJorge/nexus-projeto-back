@@ -7,6 +7,8 @@ import { UsuarioNaoEncontradoException } from '../exceptions/UsuarioNaoEncontrad
 import { RegistroForm } from '../forms/RegistroForm';
 import { UsuarioJaCadastradoException } from '../exceptions/UsuarioJaCadastradoException';
 import { TokenService } from 'src/shared/services/Token.service';
+import fs from 'fs';
+import { SaldoMockModel } from 'mock/SaldoMockModel';
 
 @Injectable()
 export class AuthService {
@@ -59,9 +61,19 @@ export class AuthService {
         },
       },
     });
+    this.gerarSaldo(usuario.id);
     return {
       accessToken: TokenService.gerarAccessToken(usuario),
       refreshToken: TokenService.gerarRefreshToken(usuario),
     };
+  }
+  gerarSaldo(userId: number): void {
+    const saldos = fs.readFileSync('mock/SaldoMock.json', 'utf-8');
+    const obj: SaldoMockModel = JSON.parse(saldos) as SaldoMockModel;
+    const usuarios = obj.users;
+    if (!usuarios || !usuarios.length) return;
+    usuarios.push({ id: userId, saldo: 0 });
+    const dados: SaldoMockModel = JSON.parse(saldos) as SaldoMockModel;
+    fs.writeFileSync('mock/SaldoMock.json', JSON.stringify(dados));
   }
 }
