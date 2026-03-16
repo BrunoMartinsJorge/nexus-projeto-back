@@ -1,7 +1,5 @@
 # 📦 Teste Prático - Desenvolvedor Backend | Nexus
 
-# 📦 Teste Prático - Desenvolvedor Backend | Nexus
-
 Implementação de uma **API de carteira de criptomoedas (Crypto Wallet)** desenvolvida como teste técnico para a **Nexus**.
 
 A aplicação permite:
