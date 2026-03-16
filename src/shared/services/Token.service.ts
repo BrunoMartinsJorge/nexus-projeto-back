@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { usuarios } from 'generated/prisma/client';
 import jwt from 'jsonwebtoken';
+import { TokenInvalidaException } from '../exceptions/TokenInvalidaException';
 
 export class TokenService {
   static decodeToken(token: string): {
@@ -14,7 +15,7 @@ export class TokenService {
     if (token.startsWith('Bearer ')) splited = token.split(' ')[1];
     else splited = token;
     const decoded: any = jwt.decode(splited);
-    if (!decoded) throw new Error('Token inválido');
+    if (!decoded) throw new TokenInvalidaException('Token inválido');
     return {
       id: Number(decoded.sub),
       email: decoded.email,

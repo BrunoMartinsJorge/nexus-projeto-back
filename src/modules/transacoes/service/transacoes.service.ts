@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { TransacaoDto } from '../dto/TransacaoDto';
+import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
 
 @Injectable()
 export class TransacoesService {
@@ -13,7 +14,8 @@ export class TransacoesService {
     const carteira = await this.prisma.carteira.findUnique({
       where: { usuarioId: id },
     });
-    if (!carteira) throw new Error('Carteira nao encontrada');
+    if (!carteira)
+      throw new CarteiraNaoEncontradaException('Carteira não encontrada');
     const total = await this.prisma.transacao.count({
       where: { carteiraId: carteira.id },
     });

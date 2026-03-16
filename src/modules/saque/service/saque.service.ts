@@ -5,6 +5,9 @@ import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/Usuar
 import { tipo_valor } from 'generated/prisma/enums';
 import fs from 'fs';
 import { SaldoMockModel } from 'mock/SaldoMockModel';
+import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
+import { ObjectNotFoundException } from 'src/shared/exceptions/ObjectNotFoundException';
+import { IllegalAccessException } from 'src/shared/exceptions/IllegalAccessException';
 
 @Injectable()
 export class SaqueService {
@@ -16,10 +19,11 @@ export class SaqueService {
     });
 
     if (!user)
-      throw new UsuarioNaoEncontradoException('Usuário nao encontrado');
+      throw new UsuarioNaoEncontradoException('Usuário não encontrado');
 
     const carteira = user.carteira;
-    if (!carteira) throw new Error('Carteira nao encontrada');
+    if (!carteira)
+      throw new CarteiraNaoEncontradaException('Carteira não encontrada');
 
     const saldo = await this.prisma.saldo.findFirst({
       where: {
@@ -28,7 +32,7 @@ export class SaqueService {
       },
     });
 
-    if (!saldo) throw new Error('Saldo nao encontrado');
+    if (!saldo) throw new ObjectNotFoundException('Saldo não encontrado');
 
     const novoSaldo = Number(saldo.quantidade) - form.amount;
 
@@ -47,7 +51,8 @@ export class SaqueService {
         },
       });
 
-      if (result.count === 0) throw new Error('Saldo insuficiente');
+      if (result.count === 0)
+        throw new IllegalAccessException('Saldo insuficiente');
 
       await prisma.movimentacao.create({
         data: {

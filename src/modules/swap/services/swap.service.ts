@@ -5,6 +5,9 @@ import { PrismaService } from 'src/shared/prisma/prisma.service';
 import type { CotasaoForm } from '../form/CotasaoForm';
 import { CotasaoDto } from '../dto/CotasaoDto';
 import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/UsuarioNaoEncontradoException';
+import { ObjectEqualsException } from 'src/shared/exceptions/ObjectEqualsException';
+import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
+import { IllegalAccessException } from 'src/shared/exceptions/IllegalAccessException';
 
 @Injectable()
 export class SwapService {
@@ -24,7 +27,7 @@ export class SwapService {
     const to = this.coinsVsCurrencies[form.tokenTo];
 
     if (form.tokenFrom === form.tokenTo)
-      throw new Error('Tokens devem ser diferentes');
+      throw new ObjectEqualsException('Tokens devem ser diferentes');
 
     const url = `${this.API_URL}ids=${from}&vs_currencies=${to}`;
 
@@ -61,7 +64,8 @@ export class SwapService {
       );
 
     const carteira = user.carteira;
-    if (!carteira) throw new Error('Carteira não encontrada');
+    if (!carteira)
+      throw new CarteiraNaoEncontradaException('Carteira não encontrada');
 
     const saldos = carteira.saldo;
     const cotacao = await this.calcularCotacao(form);
@@ -69,15 +73,19 @@ export class SwapService {
     const saldoTo = saldos.find((s) => s.tipo === form.tokenTo);
 
     if (!saldoFrom)
-      throw new Error('Usuário não possui saldo em ' + form.tokenFrom);
+      throw new IllegalAccessException(
+        'Usuário não possui saldo em ' + form.tokenFrom,
+      );
 
     if (!saldoTo)
-      throw new Error('Usuário não possui saldo em ' + form.tokenTo);
+      throw new IllegalAccessException(
+        'Usuário não possui saldo em ' + form.tokenTo,
+      );
 
     const totalDebito = form.amount;
 
     if (Number(saldoFrom.quantidade) < totalDebito)
-      throw new Error('Saldo insuficiente');
+      throw new IllegalAccessException('Saldo insuficiente');
 
     await this.prisma.$transaction(async (prisma) => {
       const result = await prisma.saldo.updateMany({
@@ -94,7 +102,8 @@ export class SwapService {
         },
       });
 
-      if (result.count === 0) throw new Error('Saldo insuficiente');
+      if (result.count === 0)
+        throw new IllegalAccessException('Saldo insuficiente');
 
       const saldoFromDepois = await prisma.saldo.findUnique({
         where: { id: saldoFrom.id },
