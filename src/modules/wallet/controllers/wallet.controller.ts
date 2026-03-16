@@ -5,10 +5,7 @@ import { TokenService } from 'src/shared/services/Token.service';
 
 @Controller('wallet')
 export class WalletController {
-  constructor(
-    private service: WalletService,
-    private tokenService: TokenService,
-  ) {}
+  constructor(private service: WalletService) {}
   @Get('/')
   getWallet(@Req() req: Request) {
     const token = TokenService.decodeToken(req.headers.authorization || '');
