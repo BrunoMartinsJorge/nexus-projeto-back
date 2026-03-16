@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { LoginForm } from '../forms/LoginForm';
 import bcrypt from 'bcryptjs';
 import { usuarios } from 'generated/prisma/client';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { UsuarioNaoEncontradoException } from '../exceptions/UsuarioNaoEncontradoException';
-import { RegistroForm } from '../forms/RegistroForm';
 import { UsuarioJaCadastradoException } from '../exceptions/UsuarioJaCadastradoException';
 import { TokenService } from 'src/shared/services/Token.service';
 import fs from 'fs';
 import { SaldoMockModel } from 'mock/SaldoMockModel';
+import { LoginForm } from '../forms/LoginFormSchema';
+import { RegistroForm } from '../forms/RegistroFormSchema';
 
 @Injectable()
 export class AuthService {

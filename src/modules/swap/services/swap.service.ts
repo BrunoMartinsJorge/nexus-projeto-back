@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import type { CotasaoForm } from '../form/CotasaoForm';
+import type { CotasaoForm } from '../form/CotasaoFormSchema';
 import { CotasaoDto } from '../dto/CotasaoDto';
 import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/UsuarioNaoEncontradoException';
 import { ObjectEqualsException } from 'src/shared/exceptions/ObjectEqualsException';
 import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
 import { IllegalAccessException } from 'src/shared/exceptions/IllegalAccessException';
+import { tipo_valor } from 'generated/prisma/enums';
 
 @Injectable()
 export class SwapService {
@@ -113,7 +114,7 @@ export class SwapService {
         data: {
           usuarioId: user.id,
           tipo: 'SWAP_OUT',
-          token: form.tokenFrom,
+          token: form.tokenFrom as tipo_valor,
           valor: form.amount,
           saldoAnterior: saldoFrom.quantidade,
           saldoNovo: saldoFromDepois!.quantidade,
@@ -133,7 +134,7 @@ export class SwapService {
         data: {
           usuarioId: user.id,
           tipo: 'SWAP_IN',
-          token: form.tokenTo,
+          token: form.tokenTo as tipo_valor,
           valor: cotacao.quantidadeDestino,
           saldoAnterior: saldoTo.quantidade,
           saldoNovo: saldoToDepois.quantidade,
@@ -144,7 +145,7 @@ export class SwapService {
         data: {
           usuarioId: user.id,
           tipo: 'SWAP_FEE',
-          token: form.tokenTo,
+          token: form.tokenTo as tipo_valor,
           valor: cotacao.taxa,
           saldoAnterior: saldoToDepois.quantidade,
           saldoNovo: saldoToDepois.quantidade,
@@ -155,8 +156,8 @@ export class SwapService {
         data: {
           tipo: 'SWAP',
           carteiraId: user.carteira!.id,
-          tokenFrom: form.tokenFrom,
-          tokenTo: form.tokenTo,
+          tokenFrom: form.tokenFrom as tipo_valor,
+          tokenTo: form.tokenTo as tipo_valor,
           valorFrom: form.amount,
           valorTo: cotacao.quantidadeDestino,
           taxa: cotacao.taxa,

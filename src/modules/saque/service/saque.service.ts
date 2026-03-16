@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { SaqueForm } from '../form/SaqueForm';
+import { SaqueForm } from '../form/SaqueFormSchema';
 import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/UsuarioNaoEncontradoException';
 import { tipo_valor } from 'generated/prisma/enums';
 import fs from 'fs';

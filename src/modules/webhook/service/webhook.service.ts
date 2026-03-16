@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { DepositForm } from '../forms/DepositForm';
+import { DepositForm } from '../forms/DepositFormSchema';
 import { DepositoJaExistenteException } from '../exceptions/DepositoJaExistenteException';
 import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/UsuarioNaoEncontradoException';
 import { DepositoNaoGeradoException } from '../exceptions/DepositoNaoGeradoException';
 import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
+import { tipo_valor } from 'generated/prisma/enums';
 
 @Injectable()
 export class WebhoockService {
@@ -33,7 +34,7 @@ export class WebhoockService {
           await prisma.deposito.create({
             data: {
               usuarioId: form.userId,
-              token: form.token,
+              token: form.token as tipo_valor,
               amount: form.amount,
               idempotencyKey: form.idempotencyKey,
             },
@@ -57,7 +58,7 @@ export class WebhoockService {
             data: {
               tipo: 'DEPOSIT',
               usuarioId: form.userId,
-              token: form.token,
+              token: form.token as tipo_valor,
               valor: form.amount,
               saldoAnterior: carteira.quantidade,
               saldoNovo: feita.quantidade,
