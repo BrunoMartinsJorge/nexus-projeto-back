@@ -5,8 +5,18 @@ import { AuthMiddleware } from './core/middlewares/auth.middleware';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: process.env.URL_FRONT,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: (
+      origin: string,
+      callback: (error: Error | null, allow?: boolean) => void,
+    ) => {
+      if (!origin) return callback(null, true);
+
+      if (origin.includes('vercel.app') || origin.includes('localhost')) {
+        return callback(null, true);
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   });
   const authMiddleware = new AuthMiddleware();
