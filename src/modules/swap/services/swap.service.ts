@@ -35,6 +35,10 @@ export class SwapService {
     const response = await fetch(url);
     const data = await response.json();
 
+    if (!data[from] || !data[from][to]) {
+      throw new Error(`Cotação não encontrada para ${from} -> ${to}`);
+    }
+
     const preco = data[from][to];
 
     const bruto = form.amount * preco;
