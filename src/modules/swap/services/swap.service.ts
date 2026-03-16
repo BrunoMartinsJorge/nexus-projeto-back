@@ -23,6 +23,7 @@ export class SwapService {
     ETH: 'eth',
     BRL: 'brl',
   };
+  // https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=brl
   async calcularCotacao(form: CotacaoForm): Promise<CotasaoDto> {
     const from = this.coinsIds[form.tokenFrom] ?? this.coinsIds[form.tokenTo];
     const to = this.coinsVsCurrencies[form.tokenTo];
@@ -31,10 +32,14 @@ export class SwapService {
       throw new ObjectEqualsException('Tokens devem ser diferentes');
 
     const url = `${this.API_URL}ids=${from}&vs_currencies=${to}`;
-
+    console.log('TOKEN FROM:', form.tokenFrom);
+    console.log('TOKEN TO:', form.tokenTo);
+    console.log('FROM ID:', from);
+    console.log('TO CURRENCY:', to);
+    console.log('URL:', url);
     const response = await fetch(url);
     const data = await response.json();
-
+    console.log('API DATA:', data);
     if (!data[from] || !data[from][to]) {
       throw new Error(`Cotação não encontrada para ${from} -> ${to}`);
     }
