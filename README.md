@@ -1,98 +1,300 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📦 Teste Prático - Desenvolvedor Backend | Nexus
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wallet Crypto**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+------------------------------------------------------------------------
 
-## Description
+## 🚧 Estrutura do Projeto
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```
+├── 📁 generated
+├── 📁 mock
+│   ├── ⚙️ SaldoMock.json
+│   └── 📄 SaldoMockModel.ts
+├── 📁 prisma
+│   ├── 📁 migrations
+│   │   ├── 📁 datahora-nome-migration
+│   │   │   └── 📄 migration.sql
+│   │   └── ⚙️ migration_lock.toml
+│   ├── 📄 prisma.ts
+│   └── 📄 schema.prisma
+├── 📁 src
+│   ├── 📁 core
+│   │   └── 📁 middlewares
+│   │       ├── 📄 auth.middleware.spec.ts
+│   │       └── 📄 auth.middleware.ts
+│   ├── 📁 modules
+│   │   ├── 📁 auth
+│   │   │   ├── 📁 controllers
+│   │   │   │   ├── 📄 auth.controller.spec.ts
+│   │   │   │   └── 📄 auth.controller.ts
+│   │   │   ├── 📁 exceptions
+│   │   │   │   ├── 📄 UsuarioJaCadastradoException.ts
+│   │   │   │   └── 📄 UsuarioNaoEncontradoException.ts
+│   │   │   ├── 📁 forms
+│   │   │   │   ├── 📄 LoginForm.ts
+│   │   │   │   └── 📄 RegistroForm.ts
+│   │   │   ├── 📁 services
+│   │   │   │   ├── 📄 auth.service.spec.ts
+│   │   │   │   └── 📄 auth.service.ts
+│   │   │   └── 📄 auth.module.ts
+│   │   ├── 📁 movimentacoes
+│   │   │   ├── 📁 controller
+│   │   │   │   ├── 📄 movimentacoes.controller.spec.ts
+│   │   │   │   └── 📄 movimentacoes.controller.ts
+│   │   │   ├── 📁 dto
+│   │   │   │   └── 📄 MovimentacoesDto.ts
+│   │   │   ├── 📁 services
+│   │   │   │   ├── 📄 movimentacoes.service.spec.ts
+│   │   │   │   └── 📄 movimentacoes.service.ts
+│   │   │   └── 📄 movimentacoes.module.ts
+│   │   ├── 📁 saque
+│   │   │   ├── 📁 controller
+│   │   │   │   ├── 📄 saque.controller.spec.ts
+│   │   │   │   └── 📄 saque.controller.ts
+│   │   │   ├── 📁 form
+│   │   │   │   └── 📄 SaqueForm.ts
+│   │   │   ├── 📁 service
+│   │   │   │   ├── 📄 saque.service.spec.ts
+│   │   │   │   └── 📄 saque.service.ts
+│   │   │   └── 📄 saque.module.ts
+│   │   ├── 📁 swap
+│   │   │   ├── 📁 controller
+│   │   │   │   └── 📄 swap.controller.ts
+│   │   │   ├── 📁 dto
+│   │   │   │   └── 📄 CotasaoDto.ts
+│   │   │   ├── 📁 form
+│   │   │   │   └── 📄 CotasaoForm.ts
+│   │   │   ├── 📁 services
+│   │   │   │   ├── 📄 swap.service.spec.ts
+│   │   │   │   └── 📄 swap.service.ts
+│   │   │   └── 📄 swap.module.ts
+│   │   ├── 📁 transacoes
+│   │   │   ├── 📁 controller
+│   │   │   │   ├── 📄 transacoes.controller.spec.ts
+│   │   │   │   └── 📄 transacoes.controller.ts
+│   │   │   ├── 📁 dto
+│   │   │   │   └── 📄 TransacaoDto.ts
+│   │   │   ├── 📁 service
+│   │   │   │   ├── 📄 transacoes.service.spec.ts
+│   │   │   │   └── 📄 transacoes.service.ts
+│   │   │   └── 📄 transacoes.module.ts
+│   │   ├── 📁 wallet
+│   │   │   ├── 📁 controllers
+│   │   │   │   ├── 📄 wallet.controller.spec.ts
+│   │   │   │   └── 📄 wallet.controller.ts
+│   │   │   ├── 📁 dto
+│   │   │   │   ├── 📄 WalletBalanceDto.ts
+│   │   │   │   └── 📄 WalletDto.ts
+│   │   │   ├── 📁 services
+│   │   │   │   ├── 📄 wallet.service.spec.ts
+│   │   │   │   └── 📄 wallet.service.ts
+│   │   │   └── 📄 wallet.module.ts
+│   │   └── 📁 webhook
+│   │       ├── 📁 controller
+│   │       │   ├── 📄 webhook.controller.spec.ts
+│   │       │   └── 📄 webhook.controller.ts
+│   │       ├── 📁 exceptions
+│   │       │   ├── 📄 DepositoJaExistenteException.ts
+│   │       │   └── 📄 DepositoNaoGeradoException.ts
+│   │       ├── 📁 forms
+│   │       │   └── 📄 DepositForm.ts
+│   │       ├── 📁 service
+│   │       │   ├── 📄 webhook.service.spec.ts
+│   │       │   └── 📄 webhook.service.ts
+│   │       └── 📄 webhook.module.ts
+│   ├── 📁 shared
+│   │   ├── 📁 exceptions
+│   │   │   ├── 📄 CarteiraNaoEncontradaException.ts
+│   │   │   ├── 📄 HttpExceptionFilter.ts
+│   │   │   ├── 📄 IllegalAccessException.ts
+│   │   │   ├── 📄 ObjectEqualsException.ts
+│   │   │   ├── 📄 ObjectNotFoundException.ts
+│   │   │   ├── 📄 TokenInvalidaException.ts
+│   │   │   └── 📄 TokenNaoEncontradaException.ts
+│   │   ├── 📁 prisma
+│   │   │   ├── 📄 prisma.module.ts
+│   │   │   ├── 📄 prisma.service.spec.ts
+│   │   │   └── 📄 prisma.service.ts
+│   │   └── 📁 services
+│   │       ├── 📄 Token.service.ts
+│   │       └── 📄 transacao.service.ts
+│   ├── 📄 app.module.ts
+│   └── 📄 main.ts
+├── 📁 test
+│   ├── 📄 app.e2e-spec.ts
+│   └── ⚙️ jest-e2e.json
+├── ⚙️ .gitignore
+├── ⚙️ .prettierrc
+├── 📝 README.md
+├── 📄 eslint.config.mjs
+├── ⚙️ nest-cli.json
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 prisma.config.ts
+└── ⚙️ tsconfig.json
 ```
 
-## Compile and run the project
+---
+*Generated by FileTree Pro Extension*
 
-```bash
-# development
-$ npm run start
+------------------------------------------------------------------------
 
-# watch mode
-$ npm run start:dev
+## 🚀 Tecnologias Utilizadas
 
-# production mode
-$ npm run start:prod
+-   Node.js
+-   NestJS
+-   React
+-   Prisma ORM
+-   PostgreSQL
+<!-- -   Zod (validação de dados)
+-   Redis (cache e performance) -->
+
+------------------------------------------------------------------------
+
+## ⚙️ Instalação
+
+Clone o repositório:
+
+``` bash
+git clone https://github.com/BrunoMartinsJorge/nexus-projeto-back.git
+cd nexus-projeto-back
+npm install
 ```
 
-## Run tests
+------------------------------------------------------------------------
 
-```bash
-# unit tests
-$ npm run test
+## 🗄️ Configuração do Ambiente
 
-# e2e tests
-$ npm run test:e2e
+Crie um arquivo `.env` na raiz do projeto:
 
-# test coverage
-$ npm run test:cov
+    DATABASE_URL="postgresql://user:password@localhost:5432/nexus"
+
+    JWT_SECRET="CODIGO DA SECRET DO JWT"
+
+------------------------------------------------------------------------
+
+## 🛠️ Banco de Dados
+
+Gerar o cliente do Prisma:
+
+``` bash
+npx prisma generate
 ```
 
-## Deployment
+Rodar migrations:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+``` bash
+npx prisma migrate dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+------------------------------------------------------------------------
 
-## Resources
+## ▶️ Executando o Projeto
 
-Check out a few resources that may come in handy when working with NestJS:
+Modo desenvolvimento:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+``` bash
+npx nest start --watch
+```
 
-## Support
+Modo produção:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+``` bash
+npm run build
+npm run start:prod
+```
 
-## Stay in touch
+------------------------------------------------------------------------
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🔄 Sistema de Transações
 
-## License
+O sistema registra todas as movimentações:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+-   Depósitos
+-   Saques
+-   Swaps/Trocas de tokens
+-   Taxas
+
+Cada transação armazena:
+
+-   usuarioId
+-   tipo
+-   token
+-   valor
+-   saldoAnterior
+-   saldoNovo
+-   data
+
+------------------------------------------------------------------------
+
+## 📌 Funcionalidades
+
+✔ Cadastro de usuários\
+✔ Login com autenticação\
+✔ Controle de saldo\
+✔ Swap entre tokens\
+✔ Registro de movimentações\
+✔ Sistema de taxas
+
+------------------------------------------------------------------------
+
+## 📖 API Endpoints (exemplo)
+
+### Usuários / Autenticação
+
+Base: /auth
+
+| POST -> /login -> Login de usuário
+
+| POST -> /registro -> Registrar usuário
+
+### Movimentações
+
+Base: /movimentacoes
+
+| GET -> /pagina:pagina/limite:limite -> Listagem páginada de movimentações
+
+### Saque
+
+Base: /saque
+
+| POST -> / -> Realizar saque
+
+### Swap
+
+Base: /swap
+
+| POST -> /cota -> Realiza a cotação de um saque
+
+| POST -> /efetuar-swap -> Efetua o swap/troca de tokens
+
+### Transações
+
+Base: /transacoes
+
+| GET -> /pagina:pagina/limite:limite -> Listagem páginada de transações
+
+### Wallet
+
+Base: /wallet
+
+| GET -> / -> Lista a carteira de um usuário e seus saldos
+
+| GET -> /saldo -> Busca o saldo do usuário no Mock de dados
+
+### Webhook
+
+Base: /webhook
+
+| GET -> /deposit -> Realiza o deposito via webhook
+
+| GET -> /usuarios -> Busca os usuário para a simulação do webhook
+
+------------------------------------------------------------------------
+
+## 👨‍💻 Autor
+
+Feito por:
+
+Bruno Martins Jorge
