@@ -82,13 +82,18 @@ export class SaqueService {
       });
     });
 
-    const cotacao = await this.swapService.calcularCotacao({
-      amount: form.amount,
-      tokenFrom: form.token as tipo_valor,
-      tokenTo: 'BRL',
-    });
+    let valorDeposito = form.amount;
 
-    this.depositarSalvo(userId, cotacao.quantidadeDestino);
+    if (form.token !== 'BRL') {
+      const cotacao = await this.swapService.calcularCotacao({
+        amount: form.amount,
+        tokenFrom: form.token as tipo_valor,
+        tokenTo: 'BRL',
+      });
+      valorDeposito = cotacao.quantidadeDestino;
+    }
+
+    this.depositarSalvo(userId, valorDeposito);
   }
 
   public getSaldos(id: number): number | null {
