@@ -8,10 +8,14 @@ import { SaldoMockModel } from 'mock/SaldoMockModel';
 import { CarteiraNaoEncontradaException } from 'src/shared/exceptions/CarteiraNaoEncontradaException';
 import { ObjectNotFoundException } from 'src/shared/exceptions/ObjectNotFoundException';
 import { IllegalAccessException } from 'src/shared/exceptions/IllegalAccessException';
+import { SwapService } from 'src/modules/swap/services/swap.service';
 
 @Injectable()
 export class SaqueService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private swapService: SwapService,
+  ) {}
   async efetuarSaque(form: SaqueForm, userId: number): Promise<void> {
     const user = await this.prisma.usuarios.findUnique({
       where: { id: userId },
@@ -78,7 +82,13 @@ export class SaqueService {
       });
     });
 
-    this.depositarSalvo(userId, form.amount);
+    const cotacao = await this.swapService.calcularCotacao({
+      amount: form.amount,
+      tokenFrom: form.token as tipo_valor,
+      tokenTo: 'BRL',
+    });
+
+    this.depositarSalvo(userId, cotacao.quantidadeDestino);
   }
 
   public getSaldos(id: number): number | null {
