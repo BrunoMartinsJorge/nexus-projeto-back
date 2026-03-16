@@ -8,27 +8,30 @@ export class TokenService {
     id: number;
     email: string;
     nome: string;
+    espiraEm: number;
   } {
     let splited: string = '';
     if (token.startsWith('Bearer ')) splited = token.split(' ')[1];
     else splited = token;
-    //if (!TokenService.validarToken(splited)) return null;
     const decoded: any = jwt.decode(splited);
     if (!decoded) throw new Error('Token inválido');
-    console.log(jwt.decode(splited));
     return {
       id: Number(decoded.sub),
       email: decoded.email,
       nome: decoded.nome,
+      espiraEm: decoded.exp,
     };
   }
 
   static validarToken(token: string): boolean {
+    let splited: string = '';
+    if (token.startsWith('Bearer ')) splited = token.split(' ')[1];
+    else splited = token;
     try {
-      jwt.verify(token, 'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL');
+      jwt.verify(splited, 'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL');
       return true;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   }
@@ -39,7 +42,7 @@ export class TokenService {
         email: user.email,
         nome: user.nome,
       },
-      'ACCESS_SECRET',
+      'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL',
       { expiresIn: '15m' },
     );
   }
@@ -47,8 +50,10 @@ export class TokenService {
     return jwt.sign(
       {
         sub: user.id,
+        email: user.email,
+        nome: user.nome,
       },
-      'REFRESH_SECRET',
+      'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL',
       { expiresIn: '7d' },
     );
   }
