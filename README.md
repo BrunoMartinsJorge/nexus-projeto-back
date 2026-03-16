@@ -1,6 +1,191 @@
 # 📦 Teste Prático - Desenvolvedor Backend | Nexus
 
-Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wallet Crypto**
+# 📦 Teste Prático - Desenvolvedor Backend | Nexus
+
+Implementação de uma **API de carteira de criptomoedas (Crypto Wallet)** desenvolvida como teste técnico para a **Nexus**.
+
+A aplicação permite:
+
+- cadastro e autenticação de usuários
+- gerenciamento de carteira
+- depósitos
+- swaps entre tokens
+- saques
+- registro completo de movimentações financeiras
+
+---
+
+# 🌐 Demo
+
+Frontend hospedado:
+
+https://nexus-teste-back-arquivo-front-mnwk42hu9.vercel.app/
+
+---
+
+# 🧠 Decisões Técnicas
+
+### NestJS
+Escolhi **NestJS** ao invés de Express puro pois ele oferece:
+
+- arquitetura modular
+- injeção de dependência
+- melhor organização de código
+- maior escalabilidade para projetos grandes
+
+Isso facilita manter separação entre **controllers, services e módulos**.
+
+---
+
+### Prisma ORM
+
+Escolhi **Prisma** ao invés de ORMs tradicionais como TypeORM porque ele oferece:
+
+- tipagem forte com TypeScript
+- migrations simples
+- queries mais seguras
+- excelente integração com PostgreSQL
+
+---
+
+### PostgreSQL
+
+Utilizado como banco de dados principal por ser:
+
+- robusto
+- altamente confiável
+- amplamente utilizado em sistemas financeiros
+- com ótimo suporte a tipos numéricos (Decimal)
+
+---
+
+### Arquitetura Modular
+
+O projeto foi dividido em módulos seguindo o padrão do NestJS:
+
+Auth
+Wallet
+Swap
+Saque
+Movimentações
+Transações
+Webhook
+
+Isso permite:
+
+- isolamento de responsabilidades
+- código mais organizado
+- maior facilidade de manutenção
+
+---
+
+### Sistema de Movimentações
+
+Todas as operações financeiras geram **registros de movimentação** contendo:
+
+- saldo anterior
+- saldo novo
+- tipo da operação
+- token utilizado
+- data da operação
+
+---
+
+# 🗄️ Estrutura do Banco de Dados
+
+O banco foi projetado para simular uma **carteira multi-token**.
+
+## Usuários
+
+Tabela responsável por armazenar os dados dos usuários.
+
+Campos principais:
+
+- id
+- email
+- senha
+- nome
+
+Relacionamentos:
+
+- 1 usuário possui **1 carteira**
+- 1 usuário possui **muitas movimentações**
+- 1 usuário pode ter **muitos depósitos**
+
+## Carteira
+
+Cada usuário possui **uma carteira**.
+
+
+Campos:
+
+- id
+- usuarioId
+
+Relacionamentos:
+
+- uma carteira possui **vários saldos**
+- uma carteira possui **várias transações**
+
+---
+
+## Saldos
+
+Tabela responsável por armazenar o saldo de cada token da carteira.
+
+
+Campos:
+
+- quantidade
+- tipo do token
+
+Tokens suportados: BTC | BRL | ETH
+
+## Depósitos
+
+Simulação de depósitos via webhook.
+
+Campos:
+
+- token depositado
+- valor
+- idempotencyKey
+
+A **idempotencyKey** garante que o mesmo depósito **não seja processado duas vezes**.
+
+---
+
+## Transações
+
+Registro de operações financeiras de alto nível.
+
+Tipos de transação: DEPOSITO | SWAP | WITHDRAWAL
+
+Campos principais:
+
+- token origem
+- token destino
+- valor origem
+- valor destino
+- taxa aplicada
+
+---
+
+## Movimentações
+
+Registro detalhado das alterações de saldo.
+
+Tipos: DEPOSIT | SWAP_IN | SWAP_OUT | SWAP_FEE | WITHDRAWAL
+
+Campos importantes:
+
+- valor movimentado
+- saldo anterior
+- saldo novo
+- token
+- data da operação
+
+Isso permite **rastrear exatamente como cada saldo mudou ao longo do tempo**.
 
 ------------------------------------------------------------------------
 
@@ -13,7 +198,9 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   └── 📄 SaldoMockModel.ts
 ├── 📁 prisma
 │   ├── 📁 migrations
-│   │   ├── 📁 datahora-nome-migration
+│   │   ├── 📁 20260315224430_match_field_types
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📁 20260315225452_transform_field_idempotency_key_to_unique
 │   │   │   └── 📄 migration.sql
 │   │   └── ⚙️ migration_lock.toml
 │   ├── 📄 prisma.ts
@@ -32,8 +219,8 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   │   │   │   ├── 📄 UsuarioJaCadastradoException.ts
 │   │   │   │   └── 📄 UsuarioNaoEncontradoException.ts
 │   │   │   ├── 📁 forms
-│   │   │   │   ├── 📄 LoginForm.ts
-│   │   │   │   └── 📄 RegistroForm.ts
+│   │   │   │   ├── 📄 LoginFormSchema.ts
+│   │   │   │   └── 📄 RegistroFormSchema.ts
 │   │   │   ├── 📁 services
 │   │   │   │   ├── 📄 auth.service.spec.ts
 │   │   │   │   └── 📄 auth.service.ts
@@ -53,7 +240,7 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   │   │   │   ├── 📄 saque.controller.spec.ts
 │   │   │   │   └── 📄 saque.controller.ts
 │   │   │   ├── 📁 form
-│   │   │   │   └── 📄 SaqueForm.ts
+│   │   │   │   └── 📄 SaqueFormSchema.ts
 │   │   │   ├── 📁 service
 │   │   │   │   ├── 📄 saque.service.spec.ts
 │   │   │   │   └── 📄 saque.service.ts
@@ -62,9 +249,9 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   │   │   ├── 📁 controller
 │   │   │   │   └── 📄 swap.controller.ts
 │   │   │   ├── 📁 dto
-│   │   │   │   └── 📄 CotasaoDto.ts
+│   │   │   │   └── 📄 CotacaoDto.ts
 │   │   │   ├── 📁 form
-│   │   │   │   └── 📄 CotacaoForm.ts
+│   │   │   │   └── 📄 CotacaoFormSchema.ts
 │   │   │   ├── 📁 services
 │   │   │   │   ├── 📄 swap.service.spec.ts
 │   │   │   │   └── 📄 swap.service.ts
@@ -98,7 +285,7 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   │       │   ├── 📄 DepositoJaExistenteException.ts
 │   │       │   └── 📄 DepositoNaoGeradoException.ts
 │   │       ├── 📁 forms
-│   │       │   └── 📄 DepositForm.ts
+│   │       │   └── 📄 DepositFormSchema.ts
 │   │       ├── 📁 service
 │   │       │   ├── 📄 webhook.service.spec.ts
 │   │       │   └── 📄 webhook.service.ts
@@ -117,6 +304,7 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 │   │   │   ├── 📄 prisma.service.spec.ts
 │   │   │   └── 📄 prisma.service.ts
 │   │   └── 📁 services
+│   │       ├── 📄 DecodedJwtModel.ts
 │   │       ├── 📄 Token.service.ts
 │   │       └── 📄 transacao.service.ts
 │   ├── 📄 app.module.ts
@@ -134,9 +322,7 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 ├── 📄 prisma.config.ts
 └── ⚙️ tsconfig.json
 ```
-
 ---
-*Generated by FileTree Pro Extension*
 
 ------------------------------------------------------------------------
 
@@ -147,8 +333,7 @@ Teste prático de back-end **Nexus** sobre carteira de **Criptomoedas** -> **Wal
 -   React
 -   Prisma ORM
 -   PostgreSQL
-<!-- -   Zod (validação de dados)
--   Redis (cache e performance) -->
+-   Zod
 
 ------------------------------------------------------------------------
 
@@ -168,9 +353,15 @@ npm install
 
 Crie um arquivo `.env` na raiz do projeto:
 
-    DATABASE_URL="postgresql://user:password@localhost:5432/nexus"
-
-    JWT_SECRET="CODIGO DA SECRET DO JWT"
+    DATABASE_URL="URL do Banco de dados"
+    
+    JWT_ACCESS_SECRET="Secret do JWT"
+    
+    JWT_REFRESH_SECRET="Secret do JWT para refresh token"
+    
+    API_KEY="Chave de API do CoinGecko"
+    
+    URL_FRONT="URL do front para permitir o acesso ao CORS"
 
 ------------------------------------------------------------------------
 
@@ -207,27 +398,6 @@ npm run start:prod
 
 ------------------------------------------------------------------------
 
-## 🔄 Sistema de Transações
-
-O sistema registra todas as movimentações:
-
--   Depósitos
--   Saques
--   Swaps/Trocas de tokens
--   Taxas
-
-Cada transação armazena:
-
--   usuarioId
--   tipo
--   token
--   valor
--   saldoAnterior
--   saldoNovo
--   data
-
-------------------------------------------------------------------------
-
 ## 📌 Funcionalidades
 
 ✔ Cadastro de usuários\
@@ -239,7 +409,7 @@ Cada transação armazena:
 
 ------------------------------------------------------------------------
 
-## 📖 API Endpoints (exemplo)
+## 📖 API Endpoints
 
 ### Usuários / Autenticação
 
@@ -290,6 +460,14 @@ Base: /webhook
 | GET -> /deposit -> Realiza o deposito via webhook
 
 | GET -> /usuarios -> Busca os usuário para a simulação do webhook
+
+------------------------------------------------------------------------
+
+## Front
+
+Para utilizar o front da aplicação clone o repositório do front e siga o passo a passo de como rodar o projeto em React
+
+| https://github.com/BrunoMartinsJorge/nexus-teste-back-arquivo-front.git
 
 ------------------------------------------------------------------------
 
