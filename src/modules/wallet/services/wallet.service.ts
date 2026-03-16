@@ -8,7 +8,7 @@ import { UsuarioNaoEncontradoException } from 'src/modules/auth/exceptions/Usuar
 @Injectable()
 export class WalletService {
   constructor(private prisma: PrismaService) {}
-  async getWallet(id: number) {
+  async getWallet(id: number): Promise<WalletDto | null> {
     const wallet = await this.prisma.usuarios.findUnique({
       where: { id },
       include: {
@@ -25,8 +25,14 @@ export class WalletService {
       return null;
     }
 
-    const dto = new WalletDto(carteira, carteira.saldo);
-    return dto;
+    return {
+      id: carteira.id,
+      balance: carteira.saldo.map((s) => ({
+        id: s.id,
+        tipo: s.tipo as string,
+        saldo: Number(s.quantidade),
+      })),
+    };
   }
   public getSaldos(id: number): number {
     const saldos = fs.readFileSync('mock/SaldoMock.json', 'utf-8');
