@@ -27,8 +27,16 @@ export class AuthService {
     if (!(await bcrypt.compare(form.senha, usuario.senha)))
       throw new UsuarioNaoEncontradoException('Usuário não encontrado');
     return {
-      accessToken: TokenService.gerarAccessToken(usuario),
-      refreshToken: TokenService.gerarRefreshToken(usuario),
+      accessToken: TokenService.gerarAccessToken(
+        usuario.id,
+        usuario.email,
+        usuario.nome,
+      ),
+      refreshToken: TokenService.gerarRefreshToken(
+        usuario.id,
+        usuario.email,
+        usuario.nome,
+      ),
     };
   }
   public async registrarUsuario(form: RegistroForm): Promise<{
@@ -63,9 +71,40 @@ export class AuthService {
     });
     this.gerarSaldo(usuario.id);
     return {
-      accessToken: TokenService.gerarAccessToken(usuario),
-      refreshToken: TokenService.gerarRefreshToken(usuario),
+      accessToken: TokenService.gerarAccessToken(
+        usuario.id,
+        usuario.email,
+        usuario.nome,
+      ),
+      refreshToken: TokenService.gerarRefreshToken(
+        usuario.id,
+        usuario.email,
+        usuario.nome,
+      ),
     };
+  }
+  refreshToken(refreshToken: string): string {
+    const valido: any = TokenService.validarRefreshToken(refreshToken);
+    if (!valido) throw new Error('Token inválido');
+    const payload = TokenService.decodeToken(refreshToken);
+    return TokenService.gerarAccessToken(
+      payload.id,
+      payload.email,
+      payload.nome,
+    );
+    // const newAccessToken = jwt.sign(
+    //   {
+    //     sub: payload.id,
+    //     email: payload.email,
+    //     nome: payload.nome,
+    //   },
+    //   process.env.JWT_ACCESS_SECRET!,
+    //   { expiresIn: '15m' },
+    // );
+
+    // return {
+    //   access_token: newAccessToken,
+    // };
   }
   gerarSaldo(userId: number): void {
     const saldos = fs.readFileSync('mock/SaldoMock.json', 'utf-8');

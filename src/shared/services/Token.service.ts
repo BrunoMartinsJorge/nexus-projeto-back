@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { usuarios } from 'generated/prisma/client';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { TokenInvalidaException } from '../exceptions/TokenInvalidaException';
 
 export class TokenService {
@@ -14,13 +11,13 @@ export class TokenService {
     let splited: string = '';
     if (token.startsWith('Bearer ')) splited = token.split(' ')[1];
     else splited = token;
-    const decoded: any = jwt.decode(splited);
+    const decoded: JwtPayload = jwt.decode(splited) as JwtPayload;
     if (!decoded) throw new TokenInvalidaException('Token inválido');
     return {
       id: Number(decoded.sub),
-      email: decoded.email,
-      nome: decoded.nome,
-      espiraEm: decoded.exp,
+      email: decoded.email as string,
+      nome: decoded.nome as string,
+      espiraEm: decoded.exp as number,
     };
   }
 
@@ -29,32 +26,47 @@ export class TokenService {
     if (token.startsWith('Bearer ')) splited = token.split(' ')[1];
     else splited = token;
     try {
-      jwt.verify(splited, 'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL');
+      jwt.verify(splited, process.env.JWT_ACCESS_SECRET!);
       return true;
     } catch (error: any) {
       console.error(error);
       return false;
     }
   }
-  static gerarAccessToken(user: usuarios): string {
+
+  static validarRefreshToken(token: string): boolean {
+    let splited: string = '';
+    if (token.startsWith('Bearer ')) splited = token.split(' ')[1];
+    else splited = token;
+    try {
+      jwt.verify(splited, process.env.JWT_REFRESH_SECRET!);
+      return true;
+    } catch (error: any) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  static gerarAccessToken(id: number, email: string, nome: string): string {
     return jwt.sign(
       {
-        sub: user.id,
-        email: user.email,
-        nome: user.nome,
+        sub: id,
+        email: email,
+        nome: nome,
       },
-      'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL',
+      process.env.JWT_ACCESS_SECRET!,
       { expiresIn: '15m' },
     );
   }
-  static gerarRefreshToken(user: usuarios): string {
+
+  static gerarRefreshToken(id: number, email: string, nome: string): string {
     return jwt.sign(
       {
-        sub: user.id,
-        email: user.email,
-        nome: user.nome,
+        sub: id,
+        email: email,
+        nome: nome,
       },
-      'vMXnvqLLSan6piU6Z4XUmPFjU80PG0PGTxEzZVImxWL',
+      process.env.JWT_REFRESH_SECRET!,
       { expiresIn: '7d' },
     );
   }

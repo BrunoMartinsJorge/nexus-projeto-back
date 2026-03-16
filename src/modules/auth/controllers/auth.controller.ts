@@ -25,6 +25,10 @@ export class AuthController {
     refreshToken: string;
   }> {
     const form = await RegistroFormSchema.parseAsync(body);
-    return this.service.registrarUsuario(form);
+    return await this.service.registrarUsuario(form);
+  }
+  @Post('refresh')
+  refresh(@Body() body: { refreshToken: string }) {
+    return this.service.refreshToken(body.refreshToken);
   }
 }
